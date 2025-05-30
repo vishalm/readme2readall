@@ -104,12 +104,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install -y wkhtmltopdf
+          # wkhtmltopdf removed - discontinued upstream
 
       - name: Install system dependencies (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          brew install wkhtmltopdf
+          # wkhtmltopdf removed - discontinued upstream
+          echo "No additional system dependencies needed"
 
       - name: Install Python dependencies
         run: |

@@ -6,16 +6,16 @@ This file provides shared fixtures and configuration for pytest
 if users prefer to use pytest instead of unittest.
 """
 
-import pytest
-import tempfile
+from readme2word.converter import ReadmeToWordConverter
 import os
 import sys
+import tempfile
 from pathlib import Path
+
+import pytest
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
-
-from readme2word.converter import ReadmeToWordConverter
 
 
 @pytest.fixture
@@ -31,9 +31,10 @@ def temp_dir():
     """Provide a temporary directory that gets cleaned up after tests"""
     temp_dir = tempfile.mkdtemp()
     yield temp_dir
-    
+
     # Cleanup
     import shutil
+
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
 
@@ -102,18 +103,18 @@ classDiagram
         +bark()
     }
     Animal <|-- Dog
-"""
+""",
     }
 
 
 # Test markers for categorizing tests
 pytest_markers = [
     "unit: Unit tests for individual components",
-    "integration: Integration tests for complete workflows", 
+    "integration: Integration tests for complete workflows",
     "mermaid: Tests specifically for Mermaid diagram functionality",
     "ui: Tests for user interface components",
     "performance: Performance and benchmark tests",
-    "slow: Tests that take longer to run"
+    "slow: Tests that take longer to run",
 ]
 
 
@@ -136,8 +137,8 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(pytest.mark.ui)
         elif "test_converter" in item.nodeid:
             item.add_marker(pytest.mark.unit)
-        
+
         # Mark performance tests
         if "performance" in item.name.lower():
             item.add_marker(pytest.mark.performance)
-            item.add_marker(pytest.mark.slow) 
+            item.add_marker(pytest.mark.slow)

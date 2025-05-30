@@ -6,4 +6,4 @@ README to Word converter application.
 """
 
 __version__ = "1.0.0"
-__author__ = "README2Word Team" 
+__author__ = "README2Word Team"

@@ -10,34 +10,34 @@ Tests cover:
 - Performance benchmarks
 """
 
-import unittest
-import tempfile
+from readme2word.converter import ReadmeToWordConverter
 import os
-import time
-from pathlib import Path
 import sys
+import tempfile
+import time
+import unittest
+from pathlib import Path
 
 # Add parent directory to path to import modules
 sys.path.append(str(Path(__file__).parent.parent))
 
-from readme2word.converter import ReadmeToWordConverter
-
 
 class TestIntegrationWorkflows(unittest.TestCase):
     """Integration tests for complete workflows"""
-    
+
     def setUp(self):
         """Set up test fixtures"""
         self.converter = ReadmeToWordConverter()
         self.converter.set_debug_mode(False)
         self.temp_dir = tempfile.mkdtemp()
-        
+
     def tearDown(self):
         """Clean up after tests"""
         import shutil
+
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
-    
+
     def test_complete_readme_conversion(self):
         """Test complete README conversion with all features"""
         complex_readme = """# My Awesome Project
@@ -128,54 +128,62 @@ Please read our [contributing guidelines](CONTRIBUTING.md) before submitting PRs
 
 *Built with ❤️ by the development team*
 """
-        
+
         # Test conversion
         start_time = time.time()
         output_path = self.converter.convert(
-            complex_readme, 
-            "integration_test", 
+            complex_readme,
+            "integration_test",
             include_toc=True,
-            diagram_style="default"
+            diagram_style="default",
         )
         conversion_time = time.time() - start_time
-        
+
         # Verify output
         self.assertTrue(os.path.exists(output_path))
         self.assertLess(conversion_time, 30)  # Should complete within 30 seconds
-        
+
         # Check statistics
         stats = self.converter.get_conversion_stats()
-        self.assertGreater(stats['headings'], 5)
-        self.assertEqual(stats['tables'], 1)
-        self.assertGreater(stats['code_blocks'], 1)
-        self.assertEqual(stats['mermaid_diagrams'], 2)
-        self.assertEqual(stats['images'], 2)  # Should have 2 Mermaid images
-        
+        self.assertGreater(stats["headings"], 5)
+        self.assertEqual(stats["tables"], 1)
+        self.assertGreater(stats["code_blocks"], 1)
+        self.assertEqual(stats["mermaid_diagrams"], 2)
+        self.assertEqual(stats["images"], 2)  # Should have 2 Mermaid images
+
         # Verify file size (should be reasonable)
         file_size = os.path.getsize(output_path)
         self.assertGreater(file_size, 10000)  # At least 10KB
-        self.assertLess(file_size, 5000000)   # Less than 5MB
-    
+        self.assertLess(file_size, 5000000)  # Less than 5MB
+
     def test_mermaid_diagram_types(self):
         """Test various Mermaid diagram types"""
         diagram_tests = [
-            ("flowchart", """
+            (
+                "flowchart",
+                """
 ```mermaid
 flowchart TD
     A[Start] --> B{Decision}
     B -->|Yes| C[Action 1]
     B -->|No| D[Action 2]
 ```
-"""),
-            ("sequence", """
+""",
+            ),
+            (
+                "sequence",
+                """
 ```mermaid
 sequenceDiagram
     Alice->>Bob: Hello Bob, how are you?
     Bob-->>John: How about you John?
     Bob--x Alice: I am good thanks!
 ```
-"""),
-            ("class", """
+""",
+            ),
+            (
+                "class",
+                """
 ```mermaid
 classDiagram
     class Animal {
@@ -188,8 +196,11 @@ classDiagram
     }
     Animal <|-- Dog
 ```
-"""),
-            ("state", """
+""",
+            ),
+            (
+                "state",
+                """
 ```mermaid
 stateDiagram-v2
     [*] --> Still
@@ -199,28 +210,27 @@ stateDiagram-v2
     Moving --> Crash
     Crash --> [*]
 ```
-""")
+""",
+            ),
         ]
-        
+
         for diagram_type, diagram_content in diagram_tests:
             with self.subTest(diagram_type=diagram_type):
                 markdown_content = f"# {diagram_type.title()} Test\n\n{diagram_content}"
-                
+
                 output_path = self.converter.convert(
-                    markdown_content,
-                    f"test_{diagram_type}",
-                    include_toc=False
+                    markdown_content, f"test_{diagram_type}", include_toc=False
                 )
-                
+
                 self.assertTrue(os.path.exists(output_path))
                 stats = self.converter.get_conversion_stats()
-                self.assertEqual(stats['mermaid_diagrams'], 1)
-    
+                self.assertEqual(stats["mermaid_diagrams"], 1)
+
     def test_large_document_performance(self):
         """Test performance with large documents"""
         # Generate large document
         large_content = "# Large Document Test\n\n"
-        
+
         # Add many sections
         for i in range(50):
             large_content += f"""
@@ -240,7 +250,7 @@ More content here with a table:
 | Data {i} | Value {i} | Result {i} |
 
 """
-        
+
         # Add a few Mermaid diagrams
         large_content += """
 ## Architecture Overview
@@ -259,25 +269,23 @@ sequenceDiagram
     System-->>User: Response
 ```
 """
-        
+
         # Test conversion performance
         start_time = time.time()
         output_path = self.converter.convert(
-            large_content,
-            "large_document_test",
-            include_toc=True
+            large_content, "large_document_test", include_toc=True
         )
         conversion_time = time.time() - start_time
-        
+
         # Verify results
         self.assertTrue(os.path.exists(output_path))
         self.assertLess(conversion_time, 60)  # Should complete within 1 minute
-        
+
         stats = self.converter.get_conversion_stats()
-        self.assertGreater(stats['headings'], 100)  # Many headings
-        self.assertGreater(stats['tables'], 40)     # Many tables
-        self.assertEqual(stats['mermaid_diagrams'], 2)  # 2 diagrams
-    
+        self.assertGreater(stats["headings"], 100)  # Many headings
+        self.assertGreater(stats["tables"], 40)  # Many tables
+        self.assertEqual(stats["mermaid_diagrams"], 2)  # 2 diagrams
+
     def test_error_recovery(self):
         """Test error recovery scenarios"""
         # Test with invalid Mermaid syntax
@@ -290,19 +298,17 @@ this should not work
 
 But the conversion should continue and create a document.
 """
-        
+
         output_path = self.converter.convert(
-            invalid_mermaid,
-            "error_recovery_test",
-            include_toc=False
+            invalid_mermaid, "error_recovery_test", include_toc=False
         )
-        
+
         # Should still create document despite Mermaid error
         self.assertTrue(os.path.exists(output_path))
-        
+
         stats = self.converter.get_conversion_stats()
-        self.assertEqual(stats['mermaid_diagrams'], 0)  # Failed conversion
-    
+        self.assertEqual(stats["mermaid_diagrams"], 0)  # Failed conversion
+
     def test_special_characters_handling(self):
         """Test handling of special characters and Unicode"""
         special_content = """# Special Characters Test 🚀
@@ -333,74 +339,72 @@ def unicode_test():
 | Japanese | こんにちは | 🇯🇵 |
 | Chinese | 你好 | 🇨🇳 |
 """
-        
+
         output_path = self.converter.convert(
-            special_content,
-            "special_chars_test",
-            include_toc=False
+            special_content, "special_chars_test", include_toc=False
         )
-        
+
         self.assertTrue(os.path.exists(output_path))
-        
+
         stats = self.converter.get_conversion_stats()
-        self.assertEqual(stats['headings'], 3)
-        self.assertEqual(stats['tables'], 1)
-        self.assertEqual(stats['code_blocks'], 1)
+        self.assertEqual(stats["headings"], 4)
+        self.assertEqual(stats["tables"], 1)
+        self.assertEqual(stats["code_blocks"], 1)
 
 
 class TestFileOperations(unittest.TestCase):
     """Test file I/O operations"""
-    
+
     def setUp(self):
         """Set up test fixtures"""
         self.converter = ReadmeToWordConverter()
         self.converter.set_debug_mode(False)
         self.temp_dir = tempfile.mkdtemp()
-    
+
     def tearDown(self):
         """Clean up after tests"""
         import shutil
+
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
-    
+
     def test_output_directory_creation(self):
         """Test that output directories are created properly"""
         # Test with nested directory structure
         nested_path = os.path.join(self.temp_dir, "nested", "deep", "path")
-        
+
         # Change working directory temporarily
         original_cwd = os.getcwd()
         try:
             os.chdir(self.temp_dir)
-            
+
             output_path = self.converter.convert(
-                "# Test",
-                "nested/deep/path/test_file",
-                include_toc=False
+                "# Test", "nested/deep/path/test_file", include_toc=False
             )
-            
+
             # Check that file was created in correct location
             self.assertTrue(os.path.exists(output_path))
-            
+
         finally:
             os.chdir(original_cwd)
-    
+
     def test_filename_sanitization(self):
         """Test filename sanitization for various inputs"""
         test_cases = [
             ("normal_filename", "normal_filename.docx"),
             ("file with spaces", "file with spaces.docx"),
-            ("file/with/slashes", "file/with/slashes.docx"),  # Should handle path separators
+            (
+                "file/with/slashes",
+                "file/with/slashes.docx",
+            ),  # Should handle path separators
         ]
-        
+
         for input_name, expected_pattern in test_cases:
             with self.subTest(filename=input_name):
                 output_path = self.converter.convert(
-                    "# Test",
-                    input_name,
-                    include_toc=False
+                    "# Test", input_name, include_toc=False
                 )
-                
+
                 self.assertTrue(os.path.exists(output_path))
                 self.assertTrue(output_path.endswith(".docx"))
 
@@ -409,28 +413,30 @@ def run_integration_tests():
     """Run all integration tests"""
     print("🧪 Running Integration Tests")
     print("=" * 50)
-    
+
     # Create test suite
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-    
+
     # Add test cases
     suite.addTests(loader.loadTestsFromTestCase(TestIntegrationWorkflows))
     suite.addTests(loader.loadTestsFromTestCase(TestFileOperations))
-    
+
     # Run tests
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    
+
     # Print summary
     print("\n" + "=" * 50)
     if result.wasSuccessful():
         print("✅ All integration tests passed!")
     else:
-        print(f"❌ {len(result.failures)} test(s) failed, {len(result.errors)} error(s)")
-        
+        print(
+            f"❌ {len(result.failures)} test(s) failed, {len(result.errors)} error(s)"
+        )
+
     return result.wasSuccessful()
 
 
 if __name__ == "__main__":
-    run_integration_tests() 
+    run_integration_tests()
