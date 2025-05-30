@@ -8,6 +8,7 @@ A powerful Python application that converts README.md files to professional Word
 - [✨ Key Features](#-key-features)
 - [🚀 Quick Start](#-quick-start)
 - [🐳 Docker Deployment](#-docker-deployment-recommended)
+- [☸️ Kubernetes Deployment](#️-kubernetes-deployment)
 - [📁 Project Architecture](#-project-architecture)
 - [🐳 Docker & Containerization](#-docker--containerization)
 - [🛠️ Technical Implementation](#️-technical-implementation)
@@ -188,6 +189,87 @@ make clean
    - Configure conversion options in the sidebar
    - Click "Convert to Word" and download your document
 
+## ☸️ Kubernetes Deployment
+
+Deploy the application to your local Kubernetes cluster using Helm charts for production-ready orchestration.
+
+### Prerequisites
+
+1. **Local Kubernetes Cluster**:
+   - Docker Desktop with Kubernetes enabled
+   - Minikube, Kind, or K3s/K3d
+
+2. **Required Tools**:
+   ```bash
+   # Install kubectl
+   brew install kubectl  # macOS
+   
+   # Install Helm
+   brew install helm      # macOS
+   ```
+
+3. **Verify Setup**:
+   ```bash
+   kubectl cluster-info
+   helm version
+   ```
+
+### Quick Kubernetes Deployment
+
+```bash
+# One-command deployment
+make k8s-deploy
+
+# Or manually
+cd infra
+./deploy-k8s.sh
+```
+
+This will:
+- ✅ Build the Docker image
+- ✅ Create Kubernetes namespace
+- ✅ Deploy using Helm
+- ✅ Setup ingress controller
+- ✅ Configure local DNS
+
+### Access the Application
+
+After deployment:
+- **URL**: http://readme2word.local
+- **Port Forward**: `kubectl port-forward -n readme2word svc/readme2word 8501:8501`
+
+### Kubernetes Management
+
+```bash
+# Check deployment status
+make k8s-status
+
+# View logs
+make k8s-logs
+
+# Access pod shell
+make k8s-shell
+
+# Cleanup deployment
+make k8s-cleanup
+```
+
+### Environment-Specific Deployments
+
+```bash
+# Development environment
+helm install readme2word-dev infra/helm/readme2word \
+  --namespace readme2word-dev \
+  --values infra/values-dev.yaml
+
+# Production environment
+helm install readme2word-prod infra/helm/readme2word \
+  --namespace readme2word-prod \
+  --values infra/values-prod.yaml
+```
+
+For detailed Kubernetes documentation, see [`infra/README.md`](infra/README.md).
+
 ## 📁 Project Architecture
 
 ```
@@ -206,6 +288,17 @@ readme2readall/
 │   ├── .dockerignore         # Docker build exclusions
 │   ├── deploy.sh             # Automated deployment script
 │   └── Makefile              # Common development commands
+├── ☸️ Kubernetes Infrastructure
+│   └── infra/                # Kubernetes deployment
+│       ├── README.md         # Kubernetes documentation
+│       ├── deploy-k8s.sh     # Kubernetes deployment script
+│       ├── validate-chart.sh # Helm chart validation
+│       ├── values-dev.yaml   # Development configuration
+│       ├── values-prod.yaml  # Production configuration
+│       └── helm/readme2word/ # Helm chart
+│           ├── Chart.yaml    # Chart metadata
+│           ├── values.yaml   # Default values
+│           └── templates/    # Kubernetes manifests
 ├── 📖 Documentation
 │   ├── README.md             # This comprehensive guide
 │   └── demo_readme.md        # Example/test file
