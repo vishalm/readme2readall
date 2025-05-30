@@ -351,8 +351,7 @@ def main():
             unsafe_allow_html=True,
         )
 
-        uploaded_file = st.file_uploader(
-            "Upload README file", type=["md", "txt"])
+        uploaded_file = st.file_uploader("Upload README file", type=["md", "txt"])
 
         st.markdown("**Or paste content:**")
         readme_content = st.text_area(
@@ -372,8 +371,7 @@ graph TD
 Ready to convert!""",
         )
 
-        output_filename = st.text_input(
-            "📄 Output filename", value="README_converted")
+        output_filename = st.text_input("📄 Output filename", value="README_converted")
 
     with col2:
         st.markdown(
@@ -423,7 +421,8 @@ Ready to convert!""",
 
                     converter.set_debug_mode(debug_mode)
                     output_path = converter.convert(
-                        readme_content, output_filename, include_toc, diagram_style)
+                        readme_content, output_filename, include_toc, diagram_style
+                    )
 
                     progress_bar.progress(75)
                     status_text.text("📄 Generating document...")

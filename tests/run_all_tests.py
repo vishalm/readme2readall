@@ -194,13 +194,7 @@ def check_dependencies():
     """Check if all required dependencies are available"""
     print("🔍 Checking Dependencies...")
 
-    required_modules = [
-        "streamlit",
-        "docx",
-        "markdown",
-        "bs4",
-        "requests",
-        "PIL"]
+    required_modules = ["streamlit", "docx", "markdown", "bs4", "requests", "PIL"]
 
     missing_modules = []
 
@@ -226,8 +220,7 @@ def main():
     """Main test runner function"""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="README to Word Converter Test Suite")
+    parser = argparse.ArgumentParser(description="README to Word Converter Test Suite")
     parser.add_argument(
         "--quick", action="store_true", help="Run only quick essential tests"
     )

@@ -1,13 +1,13 @@
 [flake8]
 max-line-length = 88
 extend-ignore = 
-    E501,  # line too long (handled by black)
-    W503,  # line break before binary operator
-    W293,  # blank line contains whitespace
-    W291,  # trailing whitespace
-    F401,  # imported but unused (some are needed for imports)
-    F541,  # f-string is missing placeholders
-    E722,  # do not use bare except (some are intentional)
+    E501,
+    W503,
+    W293,
+    W291,
+    F401,
+    F541,
+    E722
 exclude = 
     .git,
     __pycache__,

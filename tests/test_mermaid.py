@@ -30,8 +30,7 @@ def test_mermaid_api_connectivity():
 
     # Simple test diagram
     test_diagram = "graph TD; A-->B"
-    encoded = base64.urlsafe_b64encode(
-        test_diagram.encode("utf-8")).decode("ascii")
+    encoded = base64.urlsafe_b64encode(test_diagram.encode("utf-8")).decode("ascii")
     url = f"https://mermaid.ink/img/{encoded}"
 
     try:
@@ -147,8 +146,7 @@ This document tests the {diagram_name.lower()} conversion.
                 # Check statistics
                 stats = converter.get_conversion_stats()
                 if stats["mermaid_diagrams"] > 0:
-                    print(
-                        f"      🎯 Diagrams converted: {stats['mermaid_diagrams']}")
+                    print(f"      🎯 Diagrams converted: {stats['mermaid_diagrams']}")
                     success_count += 1
                 else:
                     print(f"      ⚠️  No diagrams were converted")
@@ -162,8 +160,7 @@ This document tests the {diagram_name.lower()} conversion.
     assert (
         success_count > 0
     ), f"No diagrams were successfully converted out of {total_count}"
-    print(
-        f"\n✅ Successfully converted {success_count}/{total_count} diagram types")
+    print(f"\n✅ Successfully converted {success_count}/{total_count} diagram types")
 
 
 def test_theme_variations():
@@ -293,8 +290,7 @@ This should handle the error gracefully.
 
     # Assert that error handling worked for at least some cases
     assert success_count > 0, f"Error handling failed for all {total_count} test cases"
-    print(
-        f"\n✅ Successfully handled errors in {success_count}/{total_count} cases")
+    print(f"\n✅ Successfully handled errors in {success_count}/{total_count} cases")
 
 
 def test_performance():
