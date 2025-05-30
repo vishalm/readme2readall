@@ -10,10 +10,12 @@
 .circleci/
 
 # Documentation
-README.md
 CHANGELOG.md
 LICENSE
+# Keep README.md for package installation
+docs/
 *.md
+!README.md
 
 # Python
 __pycache__/

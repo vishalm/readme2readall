@@ -1,5 +1,5 @@
 # Use Python 3.11 slim image as base
-FROM python:3.13-slim as base
+FROM python:3.11-slim AS base
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -25,7 +25,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Production stage
-FROM python:3.13-slim as production
+FROM python:3.11-slim AS production
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -49,7 +49,9 @@ COPY --from=base /usr/local/bin /usr/local/bin
 # Copy application code
 COPY --chown=appuser:appuser . .
 
-# Switch to non-root user
+# Install the package itself
+USER root
+RUN pip install -e .
 USER appuser
 
 # Expose Streamlit port
