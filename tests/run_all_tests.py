@@ -10,15 +10,16 @@ This script runs all test suites and provides detailed reporting:
 - Performance benchmarks
 """
 
-from tests.test_ui import run_ui_tests
-from tests.test_mermaid import run_mermaid_tests
-from tests.test_integration import run_integration_tests
-from tests.test_converter import run_converter_tests
 import importlib.util
 import sys
 import time
 import unittest
 from pathlib import Path
+
+from tests.test_converter import run_converter_tests
+from tests.test_integration import run_integration_tests
+from tests.test_mermaid import run_mermaid_tests
+from tests.test_ui import run_ui_tests
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -193,7 +194,13 @@ def check_dependencies():
     """Check if all required dependencies are available"""
     print("🔍 Checking Dependencies...")
 
-    required_modules = ["streamlit", "docx", "markdown", "bs4", "requests", "PIL"]
+    required_modules = [
+        "streamlit",
+        "docx",
+        "markdown",
+        "bs4",
+        "requests",
+        "PIL"]
 
     missing_modules = []
 
@@ -219,7 +226,8 @@ def main():
     """Main test runner function"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="README to Word Converter Test Suite")
+    parser = argparse.ArgumentParser(
+        description="README to Word Converter Test Suite")
     parser.add_argument(
         "--quick", action="store_true", help="Run only quick essential tests"
     )

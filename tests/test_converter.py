@@ -10,13 +10,15 @@ Tests cover:
 - Statistics tracking
 """
 
-from readme2word.converter import ReadmeToWordConverter
-from docx import Document
 import os
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+from docx import Document
+
+from readme2word.converter import ReadmeToWordConverter
 
 # Add parent directory to path to import converter
 sys.path.append(str(Path(__file__).parent.parent))
@@ -132,7 +134,8 @@ This is the content of my project.
 
     def test_empty_content(self):
         """Test handling of empty content"""
-        output_path = self.converter.convert("", "test_empty", include_toc=False)
+        output_path = self.converter.convert(
+            "", "test_empty", include_toc=False)
 
         # Check that file was created even with empty content
         self.assertTrue(os.path.exists(output_path))
@@ -157,7 +160,10 @@ print("code")
 - List item 2
 """
 
-        self.converter.convert(markdown_content, "test_stats", include_toc=False)
+        self.converter.convert(
+            markdown_content,
+            "test_stats",
+            include_toc=False)
         stats = self.converter.get_conversion_stats()
 
         # Verify statistics

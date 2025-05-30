@@ -6,13 +6,14 @@ This file provides shared fixtures and configuration for pytest
 if users prefer to use pytest instead of unittest.
 """
 
-from readme2word.converter import ReadmeToWordConverter
 import os
 import sys
 import tempfile
 from pathlib import Path
 
 import pytest
+
+from readme2word.converter import ReadmeToWordConverter
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))

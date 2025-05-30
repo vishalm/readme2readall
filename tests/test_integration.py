@@ -10,13 +10,14 @@ Tests cover:
 - Performance benchmarks
 """
 
-from readme2word.converter import ReadmeToWordConverter
 import os
 import sys
 import tempfile
 import time
 import unittest
 from pathlib import Path
+
+from readme2word.converter import ReadmeToWordConverter
 
 # Add parent directory to path to import modules
 sys.path.append(str(Path(__file__).parent.parent))
@@ -60,7 +61,7 @@ graph TB
     B --> C[Mermaid Processor]
     C --> D[HTML Generator]
     D --> E[Word Document]
-    
+
     subgraph "Processing Pipeline"
         B
         C
@@ -103,7 +104,7 @@ sequenceDiagram
     participant A as App
     participant C as Converter
     participant M as Mermaid API
-    
+
     U->>A: Upload README
     A->>C: Process content
     C->>M: Convert diagrams
@@ -141,7 +142,8 @@ Please read our [contributing guidelines](CONTRIBUTING.md) before submitting PRs
 
         # Verify output
         self.assertTrue(os.path.exists(output_path))
-        self.assertLess(conversion_time, 30)  # Should complete within 30 seconds
+        # Should complete within 30 seconds
+        self.assertLess(conversion_time, 30)
 
         # Check statistics
         stats = self.converter.get_conversion_stats()

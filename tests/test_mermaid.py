@@ -10,14 +10,15 @@ This script tests the Mermaid diagram conversion functionality:
 - Image generation and validation
 """
 
-from readme2word.converter import ReadmeToWordConverter
+import base64
 import os
 import sys
 import time
 from pathlib import Path
-import base64
 
 import requests
+
+from readme2word.converter import ReadmeToWordConverter
 
 # Add parent directory to path to import converter
 sys.path.append(str(Path(__file__).parent.parent))
@@ -29,7 +30,8 @@ def test_mermaid_api_connectivity():
 
     # Simple test diagram
     test_diagram = "graph TD; A-->B"
-    encoded = base64.urlsafe_b64encode(test_diagram.encode("utf-8")).decode("ascii")
+    encoded = base64.urlsafe_b64encode(
+        test_diagram.encode("utf-8")).decode("ascii")
     url = f"https://mermaid.ink/img/{encoded}"
 
     try:
@@ -66,13 +68,13 @@ sequenceDiagram
     participant Alice
     participant Bob
     participant John
-    
+
     Alice->>Bob: Hello Bob, how are you?
     Bob-->>John: How about you John?
     Bob--x Alice: I am good thanks!
     Bob-x John: I am good thanks!
     Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-    
+
     Bob-->Alice: Checking with John...
     Alice->John: Yes... John, how are you?
 """,
@@ -98,7 +100,7 @@ classDiagram
 stateDiagram-v2
     [*] --> Still
     Still --> [*]
-    
+
     Still --> Moving
     Moving --> Still
     Moving --> Crash
@@ -145,7 +147,8 @@ This document tests the {diagram_name.lower()} conversion.
                 # Check statistics
                 stats = converter.get_conversion_stats()
                 if stats["mermaid_diagrams"] > 0:
-                    print(f"      🎯 Diagrams converted: {stats['mermaid_diagrams']}")
+                    print(
+                        f"      🎯 Diagrams converted: {stats['mermaid_diagrams']}")
                     success_count += 1
                 else:
                     print(f"      ⚠️  No diagrams were converted")
@@ -156,8 +159,11 @@ This document tests the {diagram_name.lower()} conversion.
             print(f"   ❌ {diagram_name}: ERROR - {e}")
 
     # Assert that at least some diagrams were successful
-    assert success_count > 0, f"No diagrams were successfully converted out of {total_count}"
-    print(f"\n✅ Successfully converted {success_count}/{total_count} diagram types")
+    assert (
+        success_count > 0
+    ), f"No diagrams were successfully converted out of {total_count}"
+    print(
+        f"\n✅ Successfully converted {success_count}/{total_count} diagram types")
 
 
 def test_theme_variations():
@@ -239,7 +245,7 @@ random text here
         "Malformed Graph": """
 ```mermaid
 graph TD
-    A --> 
+    A -->
     --> B
     C -->
 ```
@@ -287,7 +293,8 @@ This should handle the error gracefully.
 
     # Assert that error handling worked for at least some cases
     assert success_count > 0, f"Error handling failed for all {total_count} test cases"
-    print(f"\n✅ Successfully handled errors in {success_count}/{total_count} cases")
+    print(
+        f"\n✅ Successfully handled errors in {success_count}/{total_count} cases")
 
 
 def test_performance():
@@ -356,7 +363,9 @@ This document contains multiple diagrams to test performance.
                 print(f"      ❌ Performance: SLOW (> 60s)")
 
             # Assert performance is acceptable
-            assert conversion_time < 120, f"Performance too slow: {conversion_time:.2f}s > 120s"
+            assert (
+                conversion_time < 120
+            ), f"Performance too slow: {conversion_time:.2f}s > 120s"
             assert os.path.exists(output_path), "Output file was not created"
             print(f"   ✅ Performance test passed")
         else:

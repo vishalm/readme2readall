@@ -122,9 +122,9 @@ graph TD
         # Test with special characters
         title_with_special = "Project: Version 2.0!"
         safe_filename_special = (
-            "".join(c if c.isalnum() or c in "._-" else "_" for c in title_with_special)
-            + ".docx"
-        )
+            "".join(
+                c if c.isalnum() or c in "._-" else "_" for c in title_with_special) +
+            ".docx")
         self.assertNotIn(":", safe_filename_special)
         self.assertNotIn("!", safe_filename_special)
 
@@ -140,8 +140,8 @@ graph TD
         # Validate options
         self.assertIsInstance(valid_options["include_toc"], bool)
         self.assertIn(
-            valid_options["diagram_style"], ["default", "neutral", "dark", "forest"]
-        )
+            valid_options["diagram_style"], [
+                "default", "neutral", "dark", "forest"])
         self.assertIsInstance(valid_options["filename"], str)
         self.assertTrue(len(valid_options["filename"]) > 0)
 

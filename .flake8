@@ -1,0 +1,24 @@
+[flake8]
+max-line-length = 88
+extend-ignore = 
+    E501,  # line too long (handled by black)
+    W503,  # line break before binary operator
+    W293,  # blank line contains whitespace
+    W291,  # trailing whitespace
+    F401,  # imported but unused (some are needed for imports)
+    F541,  # f-string is missing placeholders
+    E722,  # do not use bare except (some are intentional)
+exclude = 
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist,
+    *.egg-info,
+    .pytest_cache,
+    .mypy_cache
+per-file-ignores =
+    __init__.py:F401
+    tests/*:F401,F811,F841
+    setup.py:F401 

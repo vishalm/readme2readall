@@ -3,14 +3,17 @@
 Setup script for README to Word Converter
 """
 
-from setuptools import setup, find_packages
 import os
 import re
+
+from setuptools import find_packages, setup
+
 
 # Read the README file for long description
 def read_readme():
     with open("README.md", "r", encoding="utf-8") as fh:
         return fh.read()
+
 
 # Read version from __init__.py
 def get_version():
@@ -21,10 +24,13 @@ def get_version():
             return match.group(1)
         raise RuntimeError("Unable to find version string.")
 
+
 # Read requirements
 def read_requirements():
     with open("requirements.txt", "r", encoding="utf-8") as fh:
-        return [line.strip() for line in fh if line.strip() and not line.startswith("#")]
+        return [line.strip() for line in fh if line.strip()
+                and not line.startswith("#")]
+
 
 setup(
     name="readme2word-vishalm",
@@ -95,9 +101,19 @@ setup(
         ],
     },
     keywords=[
-        "readme", "markdown", "word", "docx", "converter", 
-        "mermaid", "diagrams", "documentation", "streamlit",
-        "office", "document", "export", "technical-writing"
+        "readme",
+        "markdown",
+        "word",
+        "docx",
+        "converter",
+        "mermaid",
+        "diagrams",
+        "documentation",
+        "streamlit",
+        "office",
+        "document",
+        "export",
+        "technical-writing",
     ],
     zip_safe=False,
-) 
+)

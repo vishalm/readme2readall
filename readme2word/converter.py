@@ -59,8 +59,10 @@ class ReadmeToWordConverter:
         # Process mermaid diagrams first (convert to images)
         if self.debug_mode:
             mermaid_count = len(
-                re.findall(r"```mermaid\n(.*?)\n```", readme_content, re.DOTALL)
-            )
+                re.findall(
+                    r"```mermaid\n(.*?)\n```",
+                    readme_content,
+                    re.DOTALL))
             print(f"🎨 Found {mermaid_count} Mermaid diagrams to convert")
 
         content_with_images = self._process_mermaid_diagrams(
@@ -68,7 +70,11 @@ class ReadmeToWordConverter:
         )
 
         # Convert markdown to HTML
-        md = markdown.Markdown(extensions=["tables", "fenced_code", "codehilite"])
+        md = markdown.Markdown(
+            extensions=[
+                "tables",
+                "fenced_code",
+                "codehilite"])
         html_content = md.convert(content_with_images)
 
         # Parse HTML and convert to Word
@@ -99,13 +105,14 @@ class ReadmeToWordConverter:
 
         # Code block style
         try:
-            code_style = styles.add_style("Code Block", WD_STYLE_TYPE.PARAGRAPH)
+            code_style = styles.add_style(
+                "Code Block", WD_STYLE_TYPE.PARAGRAPH)
             code_style.font.name = "Consolas"
             code_style.font.size = Pt(9)
             code_style.paragraph_format.left_indent = Inches(0.5)
             code_style.paragraph_format.space_before = Pt(6)
             code_style.paragraph_format.space_after = Pt(6)
-        except:
+        except BaseException:
             pass  # Style might already exist
 
     def _extract_title(self, content: str) -> str:
@@ -126,7 +133,10 @@ class ReadmeToWordConverter:
         p.italic = True
         doc.add_page_break()
 
-    def _process_mermaid_diagrams(self, content: str, style: str = "default") -> str:
+    def _process_mermaid_diagrams(
+            self,
+            content: str,
+            style: str = "default") -> str:
         """Convert Mermaid diagrams to images using mermaid.ink API"""
         # Improved regex pattern to handle various whitespace scenarios
         mermaid_pattern = r"```mermaid\s*\n(.*?)\n\s*```"
@@ -134,7 +144,8 @@ class ReadmeToWordConverter:
         def replace_mermaid(match):
             mermaid_code = match.group(1).strip()
             if self.debug_mode:
-                print(f"🎨 Processing Mermaid diagram {self.mermaid_counter + 1}:")
+                print(
+                    f"🎨 Processing Mermaid diagram {self.mermaid_counter + 1}:")
                 print(f"   Code preview: {mermaid_code[:50]}...")
 
             try:
@@ -158,7 +169,11 @@ class ReadmeToWordConverter:
                     print(f"   ❌ Exception during conversion: {e}")
                 return f"\n```\n{mermaid_code}\n```\n"
 
-        result = re.sub(mermaid_pattern, replace_mermaid, content, flags=re.DOTALL)
+        result = re.sub(
+            mermaid_pattern,
+            replace_mermaid,
+            content,
+            flags=re.DOTALL)
 
         if self.debug_mode:
             print(
@@ -167,19 +182,22 @@ class ReadmeToWordConverter:
 
         return result
 
-    def _mermaid_to_image(self, mermaid_code: str, style: str = "default") -> str:
+    def _mermaid_to_image(
+            self,
+            mermaid_code: str,
+            style: str = "default") -> str:
         """Convert mermaid code to image using mermaid.ink API"""
         try:
             self.mermaid_counter += 1
 
             if self.debug_mode:
-                print(f"   🌐 Calling Mermaid API for diagram {self.mermaid_counter}")
+                print(
+                    f"   🌐 Calling Mermaid API for diagram {self.mermaid_counter}")
 
             # Clean and encode mermaid code
             cleaned_code = mermaid_code.strip()
-            encoded = base64.urlsafe_b64encode(cleaned_code.encode("utf-8")).decode(
-                "ascii"
-            )
+            encoded = base64.urlsafe_b64encode(
+                cleaned_code.encode("utf-8")).decode("ascii")
 
             # Get image from mermaid.ink with proper theme mapping
             theme_map = {
@@ -209,7 +227,8 @@ class ReadmeToWordConverter:
                 content_type = response.headers.get("content-type", "")
                 if "image" not in content_type:
                     if self.debug_mode:
-                        print(f"   ⚠️  Warning: Expected image but got {content_type}")
+                        print(
+                            f"   ⚠️  Warning: Expected image but got {content_type}")
                         print(f"   Response preview: {response.text[:100]}...")
                     return None
 
@@ -282,7 +301,8 @@ class ReadmeToWordConverter:
             self.stats["headings"] += 1
 
         elif element.name == "p":
-            # Process paragraph content in order, handling mixed text and images
+            # Process paragraph content in order, handling mixed text and
+            # images
             self._process_paragraph_with_mixed_content(element, doc)
 
         elif element.name == "table":
@@ -343,7 +363,8 @@ class ReadmeToWordConverter:
                     # Other inline elements
                     if current_paragraph is None:
                         current_paragraph = doc.add_paragraph()
-                    self._process_single_inline_element(child, current_paragraph)
+                    self._process_single_inline_element(
+                        child, current_paragraph)
 
     def _process_inline_elements(self, element, paragraph):
         """Process inline elements within a paragraph"""
@@ -405,7 +426,7 @@ class ReadmeToWordConverter:
         p = doc.add_paragraph(code_text)
         try:
             p.style = "Code Block"
-        except:
+        except BaseException:
             # Fallback if custom style not available
             p.style = "No Spacing"
             for run in p.runs:
@@ -437,7 +458,8 @@ class ReadmeToWordConverter:
 
                     # Add image to document with reasonable size
                     try:
-                        # Try to add with 6 inch width, but handle oversized images
+                        # Try to add with 6 inch width, but handle oversized
+                        # images
                         doc.add_picture(str(image_path), width=Inches(6))
                         self.stats["images"] += 1
 
@@ -462,7 +484,7 @@ class ReadmeToWordConverter:
                             self.stats["images"] += 1
                             if self.debug_mode:
                                 print(f"   ✅ Image added with smaller size")
-                        except:
+                        except BaseException:
                             if self.debug_mode:
                                 print(
                                     f"   ❌ Failed to add image even with smaller size"

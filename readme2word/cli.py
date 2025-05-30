@@ -28,12 +28,15 @@ Examples:
   readme2word README.md --debug            # Enable debug mode
   readme2word README.md --theme dark       # Use dark theme for diagrams
   readme2word --web                        # Launch web interface
-  
+
 For more information, visit: https://github.com/vishalm/readme2readall
         """,
     )
 
-    parser.add_argument("input_file", nargs="?", help="Input README.md file to convert")
+    parser.add_argument(
+        "input_file",
+        nargs="?",
+        help="Input README.md file to convert")
 
     parser.add_argument(
         "-o",
@@ -50,12 +53,14 @@ For more information, visit: https://github.com/vishalm/readme2readall
     )
 
     parser.add_argument(
-        "--debug", action="store_true", help="Enable debug mode with verbose logging"
-    )
+        "--debug",
+        action="store_true",
+        help="Enable debug mode with verbose logging")
 
     parser.add_argument(
-        "--no-toc", action="store_true", help="Disable table of contents generation"
-    )
+        "--no-toc",
+        action="store_true",
+        help="Disable table of contents generation")
 
     parser.add_argument(
         "--web",
@@ -75,7 +80,9 @@ def validate_input_file(file_path: str) -> Path:
     path = Path(file_path)
 
     if not path.exists():
-        print(f"Error: Input file '{file_path}' does not exist.", file=sys.stderr)
+        print(
+            f"Error: Input file '{file_path}' does not exist.",
+            file=sys.stderr)
         sys.exit(1)
 
     if not path.is_file():
@@ -83,13 +90,16 @@ def validate_input_file(file_path: str) -> Path:
         sys.exit(1)
 
     if not path.suffix.lower() in [".md", ".markdown"]:
-        print(f"Warning: '{file_path}' does not have a .md or .markdown extension.")
+        print(
+            f"Warning: '{file_path}' does not have a .md or .markdown extension.")
 
     try:
         with open(path, "r", encoding="utf-8") as f:
             f.read(1)  # Try to read one character
     except (IOError, UnicodeDecodeError) as e:
-        print(f"Error: Cannot read input file '{file_path}': {e}", file=sys.stderr)
+        print(
+            f"Error: Cannot read input file '{file_path}': {e}",
+            file=sys.stderr)
         sys.exit(1)
 
     return path
@@ -105,8 +115,11 @@ def generate_output_filename(input_path: Path, output: Optional[str]) -> str:
 
 
 def convert_file(
-    input_path: Path, output_filename: str, theme: str, debug: bool, include_toc: bool
-) -> bool:
+        input_path: Path,
+        output_filename: str,
+        theme: str,
+        debug: bool,
+        include_toc: bool) -> bool:
     """Convert a single file and return success status."""
     try:
         # Read input file
@@ -141,7 +154,9 @@ def convert_file(
 
             return True
         else:
-            print(f"❌ Conversion failed. Check the logs for details.", file=sys.stderr)
+            print(
+                f"❌ Conversion failed. Check the logs for details.",
+                file=sys.stderr)
             return False
 
     except Exception as e:
