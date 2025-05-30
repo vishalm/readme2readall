@@ -75,6 +75,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Create .pypirc
+      env:
+        PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        PYPI_REPOSITORY_URL: ${{ secrets.PYPI_REPOSITORY_URL }}
+      run: |
+        mkdir -p ~/.config/
+        cat <<EOF > ~/.config/.pypirc
+        [distutils]
+        index-servers = your-pypi-repository
+        [your-pypi-repository]
+        repository = ${{ secrets.PYPI_REPOSITORY_URL }}
+        username = ${{ secrets.PYPI_USERNAME }}
+        password = ${{ secrets.PYPI_PASSWORD }}
+        EOF
+
     - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
@@ -117,6 +133,22 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+
+    - name: Create .pypirc
+      env:
+        PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        PYPI_REPOSITORY_URL: ${{ secrets.PYPI_REPOSITORY_URL }}
+      run: |
+        mkdir -p ~/.config/
+        cat <<EOF > ~/.config/.pypirc
+        [distutils]
+        index-servers = your-pypi-repository
+        [your-pypi-repository]
+        repository = ${{ secrets.PYPI_REPOSITORY_URL }}
+        username = ${{ secrets.PYPI_USERNAME }}
+        password = ${{ secrets.PYPI_PASSWORD }}
+        EOF
 
     - name: Download build artifacts
       uses: actions/download-artifact@v3
