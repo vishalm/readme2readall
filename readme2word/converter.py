@@ -78,15 +78,11 @@ class ReadmeToWordConverter:
         self._convert_html_to_word(soup, doc)
 
         # Save document
-        output_dir = Path("output")
-        output_dir.mkdir(exist_ok=True)
-
-        # Handle nested paths in output_filename
         # Check if filename already has .docx extension to avoid double extension
         if output_filename.endswith('.docx'):
-            output_path = output_dir / output_filename
+            output_path = Path(output_filename)
         else:
-            output_path = output_dir / f"{output_filename}.docx"
+            output_path = Path(f"{output_filename}.docx")
 
         # Create parent directories if they don't exist
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -222,7 +218,7 @@ class ReadmeToWordConverter:
                     return None
 
                 # Save image with absolute path
-                output_dir = Path("output/images")
+                output_dir = Path("images")
                 output_dir.mkdir(parents=True, exist_ok=True)
                 image_path = output_dir / f"mermaid_{self.mermaid_counter}.png"
 

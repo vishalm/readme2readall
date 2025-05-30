@@ -121,16 +121,16 @@ def convert_file(
         # Perform conversion
         print(f"Converting '{input_path}' to '{output_filename}'...")
 
-        success = converter.convert(
+        actual_output_path = converter.convert(
             readme_content=content,
             output_filename=output_filename,
             include_toc=include_toc,
             diagram_style=theme,
         )
 
-        if success:
+        if actual_output_path:
             print(f"✅ Conversion completed successfully!")
-            print(f"📄 Output file: {output_filename}")
+            print(f"📄 Output file: {actual_output_path}")
 
             # Show statistics if available
             stats = getattr(converter, "conversion_stats", None)
