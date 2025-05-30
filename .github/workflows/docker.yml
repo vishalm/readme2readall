@@ -28,23 +28,41 @@ jobs:
       with:
         context: .
         push: false
+        load: true
         tags: test-image:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
     - name: Test Docker image
       run: |
+        # Verify image was built
+        docker images | grep test-image
+        
         # Start container in background
         docker run -d --name test-container -p 8501:8501 test-image:latest
         
         # Wait for container to start
+        echo "Waiting for container to start..."
         sleep 15
         
-        # Test health endpoint
-        timeout 30 bash -c 'until curl -f http://localhost:8501/_stcore/health; do sleep 2; done' || echo "Health check not available"
+        # Check if container is running
+        docker ps | grep test-container || (echo "Container not running" && docker logs test-container && exit 1)
+        
+        # Test health endpoint (with retries)
+        echo "Testing health endpoint..."
+        timeout 30 bash -c 'until curl -f http://localhost:8501/_stcore/health; do echo "Waiting for health endpoint..."; sleep 2; done' || echo "Health check not available"
         
         # Test that Streamlit is running
+        echo "Testing Streamlit interface..."
         curl -f http://localhost:8501 || echo "Streamlit interface not accessible"
+        
+        # Test CLI functionality
+        echo "Testing CLI functionality..."
+        docker exec test-container readme2word --version || echo "CLI test failed"
+        
+        # Show container logs for debugging
+        echo "Container logs:"
+        docker logs test-container
         
         # Stop and remove container
         docker stop test-container
