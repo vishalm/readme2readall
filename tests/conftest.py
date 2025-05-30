@@ -15,7 +15,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from converter import ReadmeToWordConverter
+from readme2word.converter import ReadmeToWordConverter
 
 
 @pytest.fixture

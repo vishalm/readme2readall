@@ -129,7 +129,7 @@ def convert_file(input_path: Path, output_filename: str, theme: str, debug: bool
         print(f"Converting '{input_path}' to '{output_filename}'...")
         
         success = converter.convert(
-            content=content,
+            readme_content=content,
             output_filename=output_filename,
             include_toc=include_toc,
             diagram_style=theme

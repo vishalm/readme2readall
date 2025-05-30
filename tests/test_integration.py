@@ -20,7 +20,7 @@ import sys
 # Add parent directory to path to import modules
 sys.path.append(str(Path(__file__).parent.parent))
 
-from converter import ReadmeToWordConverter
+from readme2word.converter import ReadmeToWordConverter
 
 
 class TestIntegrationWorkflows(unittest.TestCase):
@@ -80,7 +80,7 @@ graph TB
 
 ### Python Implementation
 ```python
-from converter import ReadmeToWordConverter
+from readme2word.converter import ReadmeToWordConverter
 
 converter = ReadmeToWordConverter()
 result = converter.convert(content, "output")
