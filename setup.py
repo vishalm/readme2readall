@@ -27,7 +27,7 @@ def read_requirements():
         return [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="readme2word",
+    name="readme2word-vishalm",
     version=get_version(),
     author="Vishal Mishra",
     author_email="vishal@example.com",
