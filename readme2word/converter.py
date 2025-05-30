@@ -82,7 +82,11 @@ class ReadmeToWordConverter:
         output_dir.mkdir(exist_ok=True)
 
         # Handle nested paths in output_filename
-        output_path = output_dir / f"{output_filename}.docx"
+        # Check if filename already has .docx extension to avoid double extension
+        if output_filename.endswith('.docx'):
+            output_path = output_dir / output_filename
+        else:
+            output_path = output_dir / f"{output_filename}.docx"
 
         # Create parent directories if they don't exist
         output_path.parent.mkdir(parents=True, exist_ok=True)
