@@ -155,18 +155,31 @@ cython_debug/
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be added to the global gitignore or merged into this project gitignore.  For a PyCharm
-#  project, it is recommended to include the following files in version control:
-#  - .idea/modules.xml
-#  - .idea/*.iml
-#  - .idea/misc.xml
-#  - .idea/vcs.xml
+#  project, it is recommended to ignore the entire .idea directory.
 .idea/
 
 # VS Code
 .vscode/
 
-# Streamlit
-.streamlit/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
 
 # Project specific
 output/
@@ -176,26 +189,45 @@ output/
 *.jpeg
 *.gif
 *.svg
+temp/
+tmp/
+
+# Streamlit
+.streamlit/
+
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+
+# Logs
+logs/
+*.log
 
 # Temporary files
 *.tmp
 *.temp
+*.swp
+*.swo
 *~
 
+# IDE files
+*.sublime-project
+*.sublime-workspace
+
+# Package manager files
+package-lock.json
+yarn.lock
+
 # OS generated files
-.DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs
-*.log
-logs/
+Icon?
 
 # Test files
-test_*.py
-*_test.py
+test_output/
+test_*.docx
 debug_*.py 
