@@ -57,7 +57,7 @@ dev = [
     "pre-commit>=3.0.0",
     "safety>=2.3.0",
     "bandit>=1.7.0",
-    "types-Markdown>=3.8.0",
+    "types-Markdown>=3.7.0",
     "types-requests>=2.32.0",
 ]
 docker = [
