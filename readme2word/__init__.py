@@ -8,6 +8,8 @@ Author: Vishal Mishra
 License: MIT
 """
 
+from typing import Dict, Tuple
+
 __version__ = "1.0.0"
 __author__ = "Vishal Mishra"
 __email__ = "vishal@example.com"
@@ -36,11 +38,23 @@ __all__ = [
 VERSION_INFO = tuple(map(int, __version__.split(".")))
 
 
-def get_version():
-    """Return the version string."""
+def get_version() -> str:
+    """Get the package version."""
     return __version__
 
 
-def get_version_info():
+def get_version_info() -> Tuple[int, ...]:
     """Return the version info tuple."""
     return VERSION_INFO
+
+
+def get_package_info() -> Dict[str, str]:
+    """Return package information."""
+    return {
+        "name": "readme2word-vishalm",
+        "version": __version__,
+        "author": __author__,
+        "email": __email__,
+        "license": __license__,
+        "description": __description__,
+    }

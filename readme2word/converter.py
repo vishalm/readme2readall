@@ -1,15 +1,17 @@
-import base64
+import os
 import re
+import tempfile
+import base64
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Optional, Tuple, Union, Any
 
 import markdown
 import requests
 from bs4 import BeautifulSoup
 from docx import Document
+from docx.shared import Inches, Pt
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Inches, Pt
 from PIL import Image
 
 
@@ -85,7 +87,7 @@ class ReadmeToWordConverter:
         # Create parent directories if they don't exist
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        doc.save(output_path)
+        doc.save(str(output_path))
 
         if self.debug_mode:
             print(f"✅ Document saved to: {output_path}")
@@ -93,7 +95,7 @@ class ReadmeToWordConverter:
 
         return str(output_path)
 
-    def _setup_document_styles(self, doc: Document):
+    def _setup_document_styles(self, doc: Document) -> None:
         """Set up custom styles for the document"""
         styles = doc.styles
 
@@ -116,7 +118,7 @@ class ReadmeToWordConverter:
                 return line.strip()[2:].strip()
         return ""
 
-    def _add_table_of_contents(self, doc: Document):
+    def _add_table_of_contents(self, doc: Document) -> None:
         """Add a table of contents placeholder"""
         doc.add_heading("Table of Contents", 1)
         p = doc.add_paragraph()
@@ -167,7 +169,9 @@ class ReadmeToWordConverter:
 
         return result
 
-    def _mermaid_to_image(self, mermaid_code: str, style: str = "default") -> str:
+    def _mermaid_to_image(
+        self, mermaid_code: str, style: str = "default"
+    ) -> Optional[str]:
         """Convert mermaid code to image using mermaid.ink API"""
         try:
             self.mermaid_counter += 1
@@ -266,13 +270,15 @@ class ReadmeToWordConverter:
                 print(f"   ❌ Unexpected error: {e}")
             return None
 
-    def _convert_html_to_word(self, soup: BeautifulSoup, doc: Document):
+    def _convert_html_to_word(self, soup: BeautifulSoup, doc: Document) -> None:
         """Convert HTML elements to Word document elements"""
         for element in soup.children:
             if hasattr(element, "name"):
                 self._process_element(element, doc)
 
-    def _process_element(self, element, doc: Document, parent_paragraph=None):
+    def _process_element(
+        self, element: Any, doc: Document, parent_paragraph: Any = None
+    ) -> None:
         """Process individual HTML elements"""
         if element.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             level = int(element.name[1])
@@ -308,7 +314,9 @@ class ReadmeToWordConverter:
                 if hasattr(child, "name"):
                     self._process_element(child, doc)
 
-    def _process_paragraph_with_mixed_content(self, element, doc: Document):
+    def _process_paragraph_with_mixed_content(
+        self, element: Any, doc: Document
+    ) -> None:
         """Process paragraph content that may contain both text and images in sequence"""
         # Check if paragraph contains images
         img_tags = element.find_all("img")
@@ -346,7 +354,7 @@ class ReadmeToWordConverter:
                         current_paragraph = doc.add_paragraph()
                     self._process_single_inline_element(child, current_paragraph)
 
-    def _process_inline_elements(self, element, paragraph):
+    def _process_inline_elements(self, element: Any, paragraph: Any) -> None:
         """Process inline elements within a paragraph"""
         for content in element.children:
             if isinstance(content, str):
@@ -354,7 +362,7 @@ class ReadmeToWordConverter:
             elif hasattr(content, "name"):
                 self._process_single_inline_element(content, paragraph)
 
-    def _process_single_inline_element(self, content, paragraph):
+    def _process_single_inline_element(self, content: Any, paragraph: Any) -> None:
         """Process a single inline element"""
         if content.name == "strong" or content.name == "b":
             run = paragraph.add_run(content.get_text())
@@ -374,7 +382,7 @@ class ReadmeToWordConverter:
         else:
             paragraph.add_run(content.get_text())
 
-    def _convert_table(self, table_element, doc: Document):
+    def _convert_table(self, table_element: Any, doc: Document) -> None:
         """Convert HTML table to Word table"""
         rows = table_element.find_all("tr")
         if not rows:
@@ -400,7 +408,7 @@ class ReadmeToWordConverter:
 
         self.stats["tables"] += 1
 
-    def _convert_code_block(self, code_element, doc: Document):
+    def _convert_code_block(self, code_element: Any, doc: Document) -> None:
         """Convert code block to Word"""
         code_text = code_element.get_text()
         p = doc.add_paragraph(code_text)
@@ -415,7 +423,7 @@ class ReadmeToWordConverter:
 
         self.stats["code_blocks"] += 1
 
-    def _convert_image(self, img_element, doc: Document):
+    def _convert_image(self, img_element: Any, doc: Document) -> None:
         """Convert image to Word"""
         try:
             src = img_element.get("src", "")
@@ -480,7 +488,7 @@ class ReadmeToWordConverter:
             if self.debug_mode:
                 print(f"   ❌ Error processing image: {e}")
 
-    def _convert_list(self, list_element, doc: Document):
+    def _convert_list(self, list_element: Any, doc: Document) -> None:
         """Convert HTML list to Word list"""
         items = list_element.find_all("li")
         for item in items:
@@ -494,11 +502,11 @@ class ReadmeToWordConverter:
         """Get statistics about the conversion"""
         return self.stats.copy()
 
-    def set_debug_mode(self, enabled: bool):
+    def set_debug_mode(self, enabled: bool) -> None:
         """Enable or disable debug output"""
         self.debug_mode = enabled
 
-    def test_mermaid_conversion(self, test_code: str = None) -> bool:
+    def test_mermaid_conversion(self, test_code: Optional[str] = None) -> bool:
         """Test Mermaid conversion functionality"""
         if test_code is None:
             test_code = """graph TD
@@ -522,3 +530,38 @@ class ReadmeToWordConverter:
         except Exception as e:
             print(f"❌ Test failed with error: {e}")
             return False
+
+
+def convert_readme_to_word(
+    input_file: Union[str, Path],
+    output_file: Optional[Union[str, Path]] = None,
+    theme: str = "default",
+    debug: bool = False,
+) -> None:
+    """Convert README file to Word document"""
+    input_path = Path(input_file)
+
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file not found: {input_file}")
+
+    # Read the README content
+    with open(input_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Create converter instance
+    converter = ReadmeToWordConverter()
+    converter.set_debug_mode(debug)
+
+    # Determine output filename
+    if output_file is None:
+        output_filename = input_path.stem
+    else:
+        output_filename = Path(output_file).stem
+
+    # Convert to Word
+    converter.convert(
+        readme_content=content,
+        output_filename=output_filename,
+        include_toc=True,
+        diagram_style=theme,
+    )

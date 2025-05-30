@@ -153,7 +153,7 @@ def convert_file(
         return False
 
 
-def launch_web_interface():
+def launch_web_interface() -> None:
     """Launch the web interface."""
     try:
         from .web import main as web_main
@@ -170,7 +170,7 @@ def launch_web_interface():
         sys.exit(1)
 
 
-def main():
+def main() -> None:
     """Main CLI entry point."""
     parser = create_parser()
     args = parser.parse_args()

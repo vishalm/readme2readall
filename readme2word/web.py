@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 
-def main():
+def main() -> None:
     """Launch the Streamlit web interface."""
     try:
         import streamlit.web.cli as stcli
