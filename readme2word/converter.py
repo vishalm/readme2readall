@@ -1,17 +1,17 @@
+import base64
 import os
 import re
 import tempfile
-import base64
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union, Any
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import markdown
 import requests
 from bs4 import BeautifulSoup
 from docx import Document
-from docx.shared import Inches, Pt
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt
 from PIL import Image
 
 
