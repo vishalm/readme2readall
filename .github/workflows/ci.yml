@@ -234,9 +234,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # Clean any build artifacts and caches
+          rm -rf build/ dist/ *.egg-info/ __pycache__/ .pytest_cache/
+          find . -name "*.pyc" -delete
           # Uninstall any existing installation to avoid conflicts
           pip uninstall -y readme2word-vishalm || true
-          pip install -e .[dev]
+          # Force fresh installation
+          pip install -e .[dev] --force-reinstall
 
       - name: Run integration tests
         run: |
@@ -289,9 +293,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # Clean any build artifacts and caches
+          rm -rf build/ dist/ *.egg-info/ __pycache__/ .pytest_cache/
+          find . -name "*.pyc" -delete
           # Uninstall any existing installation to avoid conflicts
           pip uninstall -y readme2word-vishalm || true
-          pip install -e .[dev]
+          # Force fresh installation
+          pip install -e .[dev] --force-reinstall
 
       - name: Generate large test document
         run: |
@@ -349,12 +357,16 @@ jobs:
       - name: Test minimum dependencies
         run: |
           python -m pip install --upgrade pip
+          # Clean any build artifacts and caches
+          rm -rf build/ dist/ *.egg-info/ __pycache__/ .pytest_cache/
+          find . -name "*.pyc" -delete
           # Uninstall any existing installation to avoid conflicts
           pip uninstall -y readme2word-vishalm || true
           # Install with minimum supported versions
           pip install streamlit==1.28.0 python-docx==0.8.11 markdown==3.5.0
           pip install beautifulsoup4==4.12.0 requests==2.31.0 Pillow==10.0.0
-          pip install -e . --no-deps
+          # Force fresh installation
+          pip install -e . --no-deps --force-reinstall
           
           # Test basic functionality
           readme2word --version
