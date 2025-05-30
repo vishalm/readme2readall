@@ -34,7 +34,7 @@ def read_requirements():
 
 
 setup(
-    name="readme2word-vishalm",
+    name="readme2word-converter-vm",
     version=get_version(),
     author="Vishal Mishra",
     author_email="vishal@example.com",

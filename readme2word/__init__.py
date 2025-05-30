@@ -51,7 +51,7 @@ def get_version_info() -> Tuple[int, ...]:
 def get_package_info() -> Dict[str, str]:
     """Return package information."""
     return {
-        "name": "readme2word-vishalm",
+        "name": "readme2word-converter-vm",
         "version": __version__,
         "author": __author__,
         "email": __email__,
