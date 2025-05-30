@@ -289,6 +289,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # Uninstall any existing installation to avoid conflicts
+          pip uninstall -y readme2word-vishalm || true
           pip install -e .[dev]
 
       - name: Generate large test document
@@ -347,6 +349,8 @@ jobs:
       - name: Test minimum dependencies
         run: |
           python -m pip install --upgrade pip
+          # Uninstall any existing installation to avoid conflicts
+          pip uninstall -y readme2word-vishalm || true
           # Install with minimum supported versions
           pip install streamlit==1.28.0 python-docx==0.8.11 markdown==3.5.0
           pip install beautifulsoup4==4.12.0 requests==2.31.0 Pillow==10.0.0
