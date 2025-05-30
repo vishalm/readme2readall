@@ -79,7 +79,7 @@ class ReadmeToWordConverter:
 
         # Save document
         # Check if filename already has .docx extension to avoid double extension
-        if output_filename.endswith('.docx'):
+        if output_filename.endswith(".docx"):
             output_path = Path(output_filename)
         else:
             output_path = Path(f"{output_filename}.docx")
