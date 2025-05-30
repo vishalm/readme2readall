@@ -146,9 +146,13 @@ jobs:
 
     - name: Get version from tag
       id: get_version
+      env:
+        EVENT_NAME: ${{ github.event_name }}
+        INPUT_VERSION: ${{ github.event.inputs.version }}
+        GITHUB_REF: ${{ github.ref }}
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          VERSION="${{ github.event.inputs.version }}"
+        if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+          VERSION="$INPUT_VERSION"
         else
           VERSION=${GITHUB_REF#refs/tags/}
         fi
@@ -157,11 +161,14 @@ jobs:
 
     - name: Generate changelog
       id: changelog
+      env:
+        VERSION_NUMBER: ${{ steps.get_version.outputs.version_number }}
+        VERSION: ${{ steps.get_version.outputs.version }}
       run: |
         # Extract changelog for this version
         if [ -f CHANGELOG.md ]; then
           # Get changelog section for this version
-          awk '/^## \[${{ steps.get_version.outputs.version_number }}\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md > release_notes.md
+          awk '/^## \['"$VERSION_NUMBER"'\]/{flag=1; next} /^## \[/{flag=0} flag' CHANGELOG.md > release_notes.md
           
           # If no specific version found, use unreleased section
           if [ ! -s release_notes.md ]; then
@@ -170,7 +177,7 @@ jobs:
           fi
         else
           echo "### Changes" > release_notes.md
-          echo "Release ${{ steps.get_version.outputs.version }}" >> release_notes.md
+          echo "Release $VERSION" >> release_notes.md
         fi
 
     - name: Create GitHub Release
@@ -202,13 +209,21 @@ jobs:
     steps:
     - name: Notify success
       if: needs.create-github-release.result == 'success'
+      env:
+        VERSION: ${{ steps.get_version.outputs.version }}
+        SERVER_URL: ${{ github.server_url }}
+        REPOSITORY: ${{ github.repository }}
       run: |
-        echo "🎉 Release ${{ steps.get_version.outputs.version }} published successfully!"
+        echo "🎉 Release $VERSION published successfully!"
         echo "📦 PyPI: https://pypi.org/project/readme2word/"
-        echo "🐙 GitHub: ${{ github.server_url }}/${{ github.repository }}/releases"
+        echo "🐙 GitHub: $SERVER_URL/$REPOSITORY/releases"
 
     - name: Notify failure
       if: failure()
+      env:
+        SERVER_URL: ${{ github.server_url }}
+        REPOSITORY: ${{ github.repository }}
+        RUN_ID: ${{ github.run_id }}
       run: |
         echo "❌ Release workflow failed!"
-        echo "Check the logs for details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+        echo "Check the logs for details: $SERVER_URL/$REPOSITORY/actions/runs/$RUN_ID" 
