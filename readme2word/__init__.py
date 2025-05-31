@@ -10,7 +10,7 @@ License: MIT
 
 from typing import Dict, Tuple
 
-__version__ = "1.0.5"
+__version__ = "1.0.6"
 __author__ = "Vishal Mishra"
 __email__ = "vishal@example.com"
 __license__ = "MIT"
