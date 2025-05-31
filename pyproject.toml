@@ -68,7 +68,7 @@ kubernetes = [
     "pyyaml>=6.0",
 ]
 all = [
-    "readme2word[dev,docker,kubernetes]",
+    "readme2word-converter-vm[dev,docker,kubernetes]",
 ]
 
 [project.urls]

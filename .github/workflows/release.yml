@@ -224,7 +224,7 @@ jobs:
         REPOSITORY: ${{ github.repository }}
       run: |
         echo "🎉 Release $VERSION published successfully!"
-        echo "📦 PyPI: https://pypi.org/project/readme2word/"
+        echo "📦 PyPI: https://pypi.org/project/readme2word-converter-vm/"
         echo "🐙 GitHub: $SERVER_URL/$REPOSITORY/releases"
 
     - name: Notify failure
