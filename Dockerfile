@@ -1,5 +1,5 @@
 # Use Python 3.11 slim image as base
-FROM python:3.11-slim AS base
+FROM python:3.13-slim AS base
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -25,7 +25,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Production stage
-FROM python:3.11-slim AS production
+FROM python:3.13-slim AS production
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
